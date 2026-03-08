@@ -4,26 +4,19 @@
         {
             "label": "Assemble (a51)",
             "type": "shell",
-            "command": "${workspaceFolder}/Call51/Bin/a51.exe",
-            "args": [
-                "-l",
-                "${file}"
-            ],
+            "command": "& '${workspaceFolder}/Call51/Bin/a51.exe' -l '${file}'; if ($LASTEXITCODE -eq 0) { echo 'Successfully compiled ${fileBasename}!\n' }; exit 0",
             "options": {
                 "cwd": "${fileDirname}"
             },
             "group": "build",
             "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared",
+                "echo": false,
                 "clear": true
             },
             "problemMatcher": []
         },
         {
-            "label": "Flash to DE0-CV (JTAG)",
+            "label": "Flash via JTAG",
             "type": "shell",
             "command": "${env:QUARTUS_ROOTDIR}/bin64/quartus_stp.exe",
             "args": [
@@ -35,24 +28,35 @@
                 "cwd": "${fileDirname}"
             },
             "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared",
+                "echo": false,
                 "clear": true
             },
             "problemMatcher": []
         },
         {
             "label": "Build & Flash",
-            "dependsOn": [
-                "Assemble (a51)",
-                "Flash to DE0-CV (JTAG)"
-            ],
-            "dependsOrder": "sequence",
+            "type": "shell",
+            "command": "& '${workspaceFolder}/Call51/Bin/a51.exe' -l '${file}'; if ($LASTEXITCODE -eq 0) { echo 'Successfully compiled ${fileBasename}!\n'; & '${env:QUARTUS_ROOTDIR}/bin64/quartus_stp.exe' -t '${workspaceFolder}/Load_Script.tcl' '${fileBasenameNoExtension}.hex' }; exit 0",
+            "options": {
+                "cwd": "${fileDirname}"
+            },
             "group": {
                 "kind": "build",
                 "isDefault": true
+            },
+            "presentation": {
+                "echo": false,
+                "clear": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Clean (remove .hex and .lst files)",
+            "type": "shell",
+            "command": "Get-ChildItem -Path '${workspaceFolder}' -Recurse -Include *.hex,*.lst | Remove-Item -Force; echo 'Cleaned .hex and .lst files.'",
+            "presentation": {
+                "echo": false,
+                "clear": true
             },
             "problemMatcher": []
         }
