@@ -65,6 +65,13 @@ if {$lastbyte==0} {
 	exit
 }
 
+puts "Resetting FPGA via PULSE_NCONFIG..."
+open_device -hardware_name $usbblaster_name -device_name $target_device
+device_lock -timeout 1000
+device_ir_shift -ir_value 1 -no_captured_ir_value
+device_unlock
+close_device
+
 begin_memory_edit -hardware_name $usbblaster_name -device_name $target_device
 puts "Sending HEX file '[lindex $argv 0]'..."
 update_content_to_memory_from_file -instance_index $myindex -mem_file_path "[lindex $argv 0]" -mem_file_type hex
