@@ -4,9 +4,6 @@
         "*.a51": "asm8051",
         "*.lst": "plaintext"
     },
-    "files.exclude": {
-        "**/*.lst": true
-    },
     "files.eol": "\r\n",
     "files.encoding": "utf8"
 }
