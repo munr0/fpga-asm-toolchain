@@ -5,19 +5,33 @@
 # (Note: this example assumes only one USBBlaster connected.)
 #puts "JTAG chains:"
 
-if { [catch get_hardware_names] } {
-	puts "ERROR: USB-Blaster hardware not found."
-	exit
+set usbblaster_name ""
+set max_attempts 4
+
+for {set attempt 1} {$attempt <= $max_attempts} {incr attempt} {
+	if { [catch {get_hardware_names} hw_names] } {
+		set hw_names {}
+	}
+	foreach hardware_name $hw_names {
+		if { [string match "USB-Blaster*" $hardware_name] } {
+			set usbblaster_name $hardware_name
+		}
+		if { [string match "DE-SoC*" $hardware_name] } {
+			set usbblaster_name $hardware_name
+		}
+	}
+	if {$usbblaster_name ne ""} {
+		break
+	}
+	if {$attempt < $max_attempts} {
+		puts "USB-Blaster not found, retrying... (attempt $attempt of $max_attempts)"
+		after 1000
+	}
 }
 
-foreach hardware_name [get_hardware_names] {
-	#puts $hardware_name
-	if { [string match "USB-Blaster*" $hardware_name] } {
-		set usbblaster_name $hardware_name
-	}
-	if { [string match "DE-SoC*" $hardware_name] } {
-		set usbblaster_name $hardware_name
-	}
+if {$usbblaster_name eq ""} {
+	puts "ERROR: USB-Blaster hardware not found after $max_attempts attempts."
+	exit 1
 }
 
 # List all devices on the chain, and select the first device on the chain.
