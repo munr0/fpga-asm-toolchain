@@ -4,14 +4,14 @@ $MODDE0CV
 org 0000H
 	ljmp myprogram
 
-; For a 50MHz one clock cycle  takes 20ns
+;For a 33.33MHz one clock cycle  takes 30ns
 WaitHalfSec:
-	mov R2, #133
+	mov R2, #90
 L3: mov R1, #250
 L2: mov R0, #250
-L1: djnz R0, L1
-	djnz R1, L2
-	djnz R2, L3
+L1: djnz R0, L1 ; 3 machine cycles-> 3*30ns*250=22.5us
+	djnz R1, L2 ; 22.5us*250=5.625ms
+	djnz R2, L3 ; 5.625ms*90=0.5s (approximately)
 	ret
 
 myprogram:
