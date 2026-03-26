@@ -12,6 +12,7 @@ Serves as a drop-in replacement for [CrossIDE](https://people.ece.ubc.ca/jesusc/
 - [Quartus Prime](https://www.altera.com/products/development-tools/quartus) (for flashing via `quartus_stp.exe`)
 
 **Reference:**
+- [CPEN 312 Tips](CPEN312-tips.md)
 - [A51 Assembler Manual](Call51/Doc/a51.pdf)
 
 
